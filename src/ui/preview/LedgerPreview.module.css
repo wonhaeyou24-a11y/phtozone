@@ -1,0 +1,151 @@
+.wrap {
+  max-width: 640px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.generateBtn {
+  margin-left: auto;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 7px;
+  border: none;
+  background: #16a34a;
+  color: #fff;
+  cursor: pointer;
+}
+
+.generateBtn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.error {
+  font-size: 12.5px;
+  color: #dc2626;
+  margin: -8px 0 16px;
+}
+
+.header h2 {
+  font-size: 15px;
+  margin: 0;
+  color: #111827;
+}
+
+.pageCount {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.empty {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.pages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px;
+  background: #fff;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.badges {
+  display: flex;
+  gap: 6px;
+}
+
+.warnBadge {
+  color: #d97706;
+  background: #fffbeb;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.lockBadge {
+  color: #16a34a;
+  background: #f0fdf4;
+  padding: 2px 7px;
+  border-radius: 999px;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  row-gap: 5px;
+  column-gap: 10px;
+  font-size: 12.5px;
+  margin: 0 0 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.infoGrid dt {
+  color: #9ca3af;
+}
+
+.infoGrid dd {
+  margin: 0;
+  color: #111827;
+}
+
+.photoRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.photoCell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.photoLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+  text-align: center;
+}
+
+.photoCell img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+
+.photoMissing {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #c1c5cc;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

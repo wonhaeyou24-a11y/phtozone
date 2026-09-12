@@ -1,5 +1,6 @@
 import exifr from 'exifr';
 import type { CapturedAtSource, MetadataStatus } from '../types/photo';
+import { decodeImage } from '../utils/imageDecode';
 
 export interface ParsedMetadata {
   width?: number;
@@ -45,29 +46,11 @@ function combineGpsTimestamp(tags: any): string | undefined {
 }
 
 async function getImageDimensions(file: File): Promise<{ width?: number; height?: number }> {
-  if ('createImageBitmap' in window) {
-    try {
-      const bitmap = await createImageBitmap(file);
-      const dims = { width: bitmap.width, height: bitmap.height };
-      bitmap.close();
-      return dims;
-    } catch {
-      // fall through to <img> based fallback below
-    }
-  }
-  return new Promise((resolve) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-    img.onload = () => {
-      resolve({ width: img.naturalWidth, height: img.naturalHeight });
-      URL.revokeObjectURL(url);
-    };
-    img.onerror = () => {
-      resolve({});
-      URL.revokeObjectURL(url);
-    };
-    img.src = url;
-  });
+  const decoded = await decodeImage(file);
+  if (!decoded) return {};
+  const dims = { width: decoded.width, height: decoded.height };
+  decoded.dispose();
+  return dims;
 }
 
 /**

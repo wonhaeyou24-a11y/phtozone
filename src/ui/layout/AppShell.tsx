@@ -2,6 +2,13 @@ import { useState } from 'react';
 import { useProjectStore } from '../../state/projectStore';
 import { usePhotoStore } from '../../state/photoStore';
 import { PhotoPanel } from '../photo/PhotoPanel';
+import { MatchTestPanel } from '../group/MatchTestPanel';
+import { GroupList } from '../group/GroupList';
+import { LedgerPreview } from '../preview/LedgerPreview';
+import { ExcelUploadPanel } from '../excel/ExcelUploadPanel';
+import { ModeBMatchPanel } from '../excel/ModeBMatchPanel';
+import { AISettingsPanel } from '../ai/AISettingsPanel';
+import { useGroupStore } from '../../state/groupStore';
 import { formatFileSize, formatDateTime, formatCoords, formatHeading, formatCameraInfo } from '../../utils/format';
 import styles from './AppShell.module.css';
 
@@ -11,7 +18,7 @@ const METADATA_STATUS_LABEL: Record<string, string> = {
   FAILED: '분석 실패',
 };
 
-type SidebarTab = 'project' | 'photos' | 'groups';
+type SidebarTab = 'project' | 'excel' | 'photos' | 'groups' | 'preview' | 'ai';
 
 const MODE_LABEL: Record<string, string> = {
   A: '일반 사진 방식',
@@ -23,6 +30,7 @@ export function AppShell() {
   const closeProject = useProjectStore((s) => s.closeProject);
   const photos = usePhotoStore((s) => s.photos);
   const selectedPhotoId = usePhotoStore((s) => s.selectedPhotoId);
+  const groups = useGroupStore((s) => s.groups);
   const [tab, setTab] = useState<SidebarTab>('project');
 
   if (!project) return null;
@@ -47,13 +55,23 @@ export function AppShell() {
       <div className={styles.body}>
         <nav className={styles.sidebar}>
           <SidebarItem label="프로젝트" active={tab === 'project'} onClick={() => setTab('project')} />
+          {project.excelMode === 'B' && (
+            <SidebarItem label="Excel 업로드" active={tab === 'excel'} onClick={() => setTab('excel')} />
+          )}
           <SidebarItem
             label="사진"
             active={tab === 'photos'}
             onClick={() => setTab('photos')}
             count={photos.length}
           />
-          <SidebarItem label="그룹" active={tab === 'groups'} onClick={() => setTab('groups')} count={0} />
+          <SidebarItem
+            label="그룹"
+            active={tab === 'groups'}
+            onClick={() => setTab('groups')}
+            count={groups.length}
+          />
+          <SidebarItem label="미리보기" active={tab === 'preview'} onClick={() => setTab('preview')} />
+          <SidebarItem label="AI 설정" active={tab === 'ai'} onClick={() => setTab('ai')} />
         </nav>
 
         <main className={styles.center}>
@@ -70,9 +88,12 @@ export function AppShell() {
                 <dt>방식</dt>
                 <dd>{MODE_LABEL[project.excelMode]}</dd>
               </dl>
-              <p className={styles.nextStep}>
-                다음 단계: 사진 업로드 기능이 이어서 추가됩니다.
-              </p>
+            </section>
+          )}
+
+          {tab === 'excel' && project.excelMode === 'B' && (
+            <section className={styles.panel}>
+              <ExcelUploadPanel project={project} />
             </section>
           )}
 
@@ -84,8 +105,21 @@ export function AppShell() {
 
           {tab === 'groups' && (
             <section className={styles.panel}>
-              <h2>그룹</h2>
-              <p className={styles.empty}>아직 생성된 그룹이 없습니다.</p>
+              {project.excelMode === 'B' && <ModeBMatchPanel />}
+              <GroupList />
+              <MatchTestPanel />
+            </section>
+          )}
+
+          {tab === 'preview' && (
+            <section className={styles.panel}>
+              <LedgerPreview />
+            </section>
+          )}
+
+          {tab === 'ai' && (
+            <section className={styles.panel}>
+              <AISettingsPanel />
             </section>
           )}
         </main>
@@ -120,8 +154,15 @@ export function AppShell() {
                 <dd>{formatHeading(selectedPhoto.heading)}</dd>
                 <dt>카메라</dt>
                 <dd>{formatCameraInfo(selectedPhoto.cameraMake, selectedPhoto.cameraModel)}</dd>
-                <dt>분석 상태</dt>
+                <dt>메타데이터</dt>
                 <dd>{METADATA_STATUS_LABEL[selectedPhoto.metadataStatus]}</dd>
+                <dt>이미지 특징</dt>
+                <dd>
+                  {METADATA_STATUS_LABEL[selectedPhoto.imageAnalysisStatus]}
+                  {selectedPhoto.imageHash && (
+                    <span className={styles.hashPreview}> ({selectedPhoto.imageHash})</span>
+                  )}
+                </dd>
               </dl>
             </div>
           ) : (

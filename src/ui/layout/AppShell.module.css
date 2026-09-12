@@ -168,6 +168,12 @@
   color: #111827;
 }
 
+.hashPreview {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 10.5px;
+  color: #9ca3af;
+}
+
 .previewImg {
   width: 100%;
   border-radius: 8px;

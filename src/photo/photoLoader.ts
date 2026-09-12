@@ -22,6 +22,7 @@ export function filesToPhotos(files: File[], projectId: string): Photo[] {
       capturedAt: new Date(file.lastModified).toISOString(),
       capturedAtSource: 'FILE_MODIFIED',
       metadataStatus: 'PENDING',
+      imageAnalysisStatus: 'PENDING',
       thumbnail: objectUrl,
       originalBlob: file,
       excluded: false,

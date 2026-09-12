@@ -65,8 +65,10 @@ export function PhotoPanel({ project }: { project: Project }) {
                 <img src={photo.thumbnail} alt={photo.originalFileName} loading="lazy" />
 
                 <span className={styles.badges}>
-                  {photo.metadataStatus === 'PENDING' && <span className={styles.badge}>분석중</span>}
-                  {photo.metadataStatus === 'FAILED' && (
+                  {(photo.metadataStatus === 'PENDING' || photo.imageAnalysisStatus === 'PENDING') && (
+                    <span className={styles.badge}>분석중</span>
+                  )}
+                  {(photo.metadataStatus === 'FAILED' || photo.imageAnalysisStatus === 'FAILED') && (
                     <span className={`${styles.badge} ${styles.badgeWarn}`}>분석실패</span>
                   )}
                   {photo.metadataStatus === 'ANALYZED' && photo.latitude !== undefined && (
