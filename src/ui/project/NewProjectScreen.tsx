@@ -3,62 +3,29 @@ import { useProjectStore } from '../../state/projectStore';
 import type { ExcelMode } from '../../types/project';
 import styles from './NewProjectScreen.module.css';
 
+function defaultProjectName(): string {
+  return `사진대지_${new Date().toISOString().slice(0, 10)}`;
+}
+
 export function NewProjectScreen() {
   const createProject = useProjectStore((s) => s.createProject);
-
-  const [projectName, setProjectName] = useState('');
-  const [workLocation, setWorkLocation] = useState('');
-  const [workDate, setWorkDate] = useState(() => new Date().toISOString().slice(0, 10));
-  const [workDescription, setWorkDescription] = useState('');
   const [excelMode, setExcelMode] = useState<ExcelMode>('A');
-
-  const canSubmit = projectName.trim().length > 0;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSubmit) return;
-    createProject({ projectName, workLocation, workDate, workDescription, excelMode });
+    createProject({
+      projectName: defaultProjectName(),
+      workLocation: '',
+      workDate: new Date().toISOString().slice(0, 10),
+      workDescription: '',
+      excelMode,
+    });
   }
 
   return (
     <div className={styles.wrap}>
       <form className={styles.card} onSubmit={handleSubmit}>
-        <h1 className={styles.title}>새 프로젝트</h1>
-        <p className={styles.subtitle}>현장 사진을 정리해 전/후 사진대지 Excel을 만듭니다.</p>
-
-        <label className={styles.field}>
-          <span>현장명 *</span>
-          <input
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-            placeholder="예: 옹벽 보수공사"
-            autoFocus
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span>작업위치</span>
-          <input
-            value={workLocation}
-            onChange={(e) => setWorkLocation(e.target.value)}
-            placeholder="예: 3구간 2번 옹벽"
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span>작업일</span>
-          <input type="date" value={workDate} onChange={(e) => setWorkDate(e.target.value)} />
-        </label>
-
-        <label className={styles.field}>
-          <span>작업내용</span>
-          <textarea
-            value={workDescription}
-            onChange={(e) => setWorkDescription(e.target.value)}
-            placeholder="예: 균열 보수 및 방수 처리"
-            rows={3}
-          />
-        </label>
+        <h1 className={styles.title}>사진대지 작업(전, 후 사진 정리)</h1>
 
         <div className={styles.field}>
           <span>작업 방식</span>
@@ -82,7 +49,7 @@ export function NewProjectScreen() {
           </div>
         </div>
 
-        <button type="submit" className={styles.submit} disabled={!canSubmit}>
+        <button type="submit" className={styles.submit}>
           프로젝트 시작
         </button>
       </form>
