@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useAISettingsStore } from '../../state/aiSettingsStore';
-import { AI_PROVIDERS } from '../../ai/aiManager';
+import { AI_PROVIDERS, getProvider } from '../../ai/aiManager';
 import styles from './AISettingsPanel.module.css';
+
+const CUSTOM_MODEL_VALUE = '__custom__';
 
 /**
  * AI is entirely optional (spec sections 21, 54) — the whole app works without ever opening this
@@ -10,6 +13,20 @@ import styles from './AISettingsPanel.module.css';
 export function AISettingsPanel() {
   const { enabled, providerId, model, apiKey, setEnabled, setProviderId, setModel, setApiKey } =
     useAISettingsStore();
+
+  const provider = getProvider(providerId);
+  const models = provider?.models ?? [];
+  const isKnownModel = models.includes(model);
+  const [useCustomModel, setUseCustomModel] = useState(!isKnownModel && model !== '');
+
+  const handleModelSelect = (value: string) => {
+    if (value === CUSTOM_MODEL_VALUE) {
+      setUseCustomModel(true);
+      return;
+    }
+    setUseCustomModel(false);
+    setModel(value);
+  };
 
   return (
     <section className={styles.wrap}>
@@ -26,7 +43,14 @@ export function AISettingsPanel() {
 
       <div className={styles.field}>
         <span>AI Provider</span>
-        <select value={providerId} onChange={(e) => setProviderId(e.target.value)} disabled={!enabled}>
+        <select
+          value={providerId}
+          onChange={(e) => {
+            setProviderId(e.target.value);
+            setUseCustomModel(false);
+          }}
+          disabled={!enabled}
+        >
           {AI_PROVIDERS.map((p) => (
             <option key={p.id} value={p.id}>
               {p.label}
@@ -37,7 +61,26 @@ export function AISettingsPanel() {
 
       <div className={styles.field}>
         <span>모델</span>
-        <input value={model} onChange={(e) => setModel(e.target.value)} disabled={!enabled} />
+        <select
+          value={useCustomModel ? CUSTOM_MODEL_VALUE : model}
+          onChange={(e) => handleModelSelect(e.target.value)}
+          disabled={!enabled}
+        >
+          {models.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+          <option value={CUSTOM_MODEL_VALUE}>기타 (직접 입력)</option>
+        </select>
+        {useCustomModel && (
+          <input
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            disabled={!enabled}
+            placeholder="모델 ID 직접 입력"
+          />
+        )}
       </div>
 
       <div className={styles.field}>

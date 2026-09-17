@@ -26,5 +26,7 @@ export interface AIProvider {
   id: 'claude' | 'openai' | 'gemini';
   label: string;
   defaultModel: string;
+  /** Known selectable model ids for this provider, shown as a dropdown in AI settings. */
+  models: string[];
   analyzeMatch(request: AIMatchRequest, apiKey: string, model: string): Promise<AIMatchResponse>;
 }

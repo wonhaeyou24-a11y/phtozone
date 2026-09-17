@@ -12,6 +12,7 @@ export const openaiAdapter: AIProvider = {
   id: 'openai',
   label: 'OpenAI',
   defaultModel: 'gpt-4o',
+  models: ['gpt-4o', 'gpt-4o-mini', 'gpt-4.1', 'gpt-4.1-mini', 'o4-mini'],
 
   async analyzeMatch(request: AIMatchRequest, apiKey: string, model: string): Promise<AIMatchResponse> {
     const allImages = [request.beforeImage, ...request.candidates];

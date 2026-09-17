@@ -6,6 +6,7 @@ export const geminiAdapter: AIProvider = {
   id: 'gemini',
   label: 'Google Gemini',
   defaultModel: 'gemini-flash-latest',
+  models: ['gemini-flash-latest', 'gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash'],
 
   async analyzeMatch(request: AIMatchRequest, apiKey: string, model: string): Promise<AIMatchResponse> {
     const allImages = [request.beforeImage, ...request.candidates];

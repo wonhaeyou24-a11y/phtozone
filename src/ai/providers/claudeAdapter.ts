@@ -10,6 +10,12 @@ export const claudeAdapter: AIProvider = {
   id: 'claude',
   label: 'Anthropic Claude',
   defaultModel: 'claude-sonnet-5',
+  models: [
+    'claude-opus-5',
+    'claude-sonnet-5',
+    'claude-fable-5-1',
+    'claude-haiku-4-5-20251001',
+  ],
 
   async analyzeMatch(request: AIMatchRequest, apiKey: string, model: string): Promise<AIMatchResponse> {
     const allImages = [request.beforeImage, ...request.candidates];
